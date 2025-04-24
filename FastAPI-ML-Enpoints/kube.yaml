@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iris-ml-api-deployment
+spec:  # <-- FIXED this line (was: specs)
+  replicas: 2
+  selector:
+    matchLabels:
+      app: iris-ml-api
+  template:
+    metadata:
+      labels:
+        app: iris-ml-api
+    spec:
+      containers:
+      - name: iris-ml-api
+        image: iris-ml-api:latest
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iris-ml-api-service
+spec:
+  selector:
+    app: iris-ml-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: LoadBalancer
